@@ -1,0 +1,75 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "G++ - Build - Release",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-O2",
+                "-Wall",
+                "-std=c++0x",
+                "-static",
+                "${workspaceRoot}/main.cpp",
+                "-o",
+                "${workspaceRoot}/main.run"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "G++ - Build - Debug",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-O0",
+                "-Wall",
+                "-std=c++0x",
+                "-g",
+                "${workspaceRoot}/main.cpp",
+                "-o",
+                "${workspaceRoot}/main.run"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "rm",
+            "args": [
+                "-f",
+                "${workspaceRoot}/*.run"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "label": "g++.exe build active file",
+            "command": "C:\\TDM-GCC-32\\bin\\g++.exe",
+            "args": [
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "C:\\TDM-GCC-32\\bin"
+            }
+        }
+    ]
+}
