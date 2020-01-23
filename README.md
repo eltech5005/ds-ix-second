@@ -1,5 +1,12 @@
-# Hello world project
+# ЛЭТИ - Распределённые системы - Лабораторная работа №2
 
-This is the famous "Hello world" project for Microsoft Visual Studio Code.
+Вариант 5
 
-In fact, the goal is to save launch.json and tasks.json for C++ projects (gcc).
+Реализовано потокобезопасное бинарное дерево поиска и программа, совершающая случайные операции с деревом в многопоточном режиме.
+
+Программа предполагается для сборки и запуска на Linux.
+
+Сборка: 
+```
+g++ -O2 -Wall -std=c++0x -pthread ./main.cpp -o ./main.run
+```
