@@ -1,7 +1,3 @@
-/* 
-** Binary Search Tree implementation in C++
-** Harish R
-*/
 #include<iostream>
 #include <stdlib.h>
 #include <time.h>
@@ -11,15 +7,17 @@
 
 using namespace std;
 
-const int BST_ELEMENTS_NUMBER = rand() % 100;
-const int BST_MAX_ELEMENT_VALUE = 1000;
-const int BST_THREADS_NUMBER = rand() % 30;
-const int BST_THREADS_OPERATIONS = 100;
+// Process constraints
+const int BST_ELEMENTS_NUMBER = rand() % 100; // Elements number in BST
+const int BST_MAX_ELEMENT_VALUE = 1000;       // Max element value
+const int BST_THREADS_NUMBER = rand() % 30;   // Threads number to spawn
+const int BST_THREADS_OPERATIONS = 100;       // Number of operations to make for each thread
 
+// Mutex to make tree operations thread-safe
 mutex lock_tree;
 
+// BST description
 class BST {
-    
     struct node {
         int data;
         node* left;
@@ -39,10 +37,8 @@ class BST {
         return NULL;
     }
 
-    node* insert(int x, node* t)
-    {
-        if(t == NULL)
-        {
+    node* insert(int x, node* t) {
+        if(t == NULL) {
             t = new node;
             t->data = x;
             t->left = t->right = NULL;
@@ -54,8 +50,7 @@ class BST {
         return t;
     }
 
-    node* findMin(node* t)
-    {
+    node* findMin(node* t) {
         if(t == NULL)
             return NULL;
         else if(t->left == NULL)
@@ -81,14 +76,12 @@ class BST {
             t->left = remove(x, t->left);
         else if(x > t->data)
             t->right = remove(x, t->right);
-        else if(t->left && t->right)
-        {
+        else if(t->left && t->right) {
             temp = findMin(t->right);
             t->data = temp->data;
             t->right = remove(t->data, t->right);
-        }
-        else
-        {
+        } 
+        else {
             temp = t;
             if(t->left == NULL)
                 t = t->right;
@@ -161,50 +154,52 @@ public:
     }
 };
 
+// Threads process function - preform random operation multiple times
 void t_thread (BST* t) {
-    for (int i = 0; i < BST_THREADS_OPERATIONS; i++){
+    for (int i = 0; i < BST_THREADS_OPERATIONS; i++) {
         int action = rand() % 3;
-        switch (action)
-        {
-        case 0:
-            t->insert(rand() % BST_MAX_ELEMENT_VALUE);
-            break;
-        
-        case 1:
-            t->search(rand() % BST_MAX_ELEMENT_VALUE);
-            break;
-        
-        case 2:
-            t->remove(rand() % BST_MAX_ELEMENT_VALUE);
-            break;
+        switch (action) {
+            case 0:
+                t->insert(rand() % BST_MAX_ELEMENT_VALUE); break;
+            
+            case 1:
+                t->search(rand() % BST_MAX_ELEMENT_VALUE); break;
+            
+            case 2:
+                t->remove(rand() % BST_MAX_ELEMENT_VALUE); break;
 
-        default:
-           break;
+            default:
+                break;
         }
     }
 }
 
 int main() {
 
-    BST t;
+    srand(time(NULL)); // Initialize random numbers generator
 
+    BST t; // Binary tree instance
+    thread th[BST_THREADS_NUMBER]; // Threads array
+
+    // Fill BST with random data
     for (int i = 0; i < BST_ELEMENTS_NUMBER; i++)
-      t.insert(rand() % BST_MAX_ELEMENT_VALUE);
+        t.insert(rand() % BST_MAX_ELEMENT_VALUE);
 
+    puts ("Initial binary tree:");
     t.display();
+    puts ("");
 
-    srand(time(NULL));    
+    // Spawn working threads
+    for (int thread_counter = 0; thread_counter < BST_THREADS_NUMBER; thread_counter++)
+        th[thread_counter] = thread(t_thread, &t);
 
-    thread th[BST_THREADS_NUMBER];
+    // Wait for all threads finish their work
+    for (int thread_counter = 0; thread_counter < BST_THREADS_NUMBER; thread_counter++)
+        th[thread_counter].join();
 
-    for (int thread_c = 0; thread_c < BST_THREADS_NUMBER; thread_c++){
-        th[thread_c] = thread(t_thread, &t);
-    }
-
-    for (int thread_c = 0; thread_c < BST_THREADS_NUMBER; thread_c++)
-      th[thread_c].join();
-
+    puts ("Tree processed with threads:");
     t.display();
+    puts ("");
 
     return 0; 
 }
